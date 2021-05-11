@@ -1,62 +1,89 @@
-
 document.addEventListener('click', function(event) {
-    var target = event.target;
-    markx(target)
+    var target = event.target
+    markX(target);
 });
 
-function markx(element){
-    if (element.hasAttribute("data-cell-index") && element.innerText == "") {
+function markX(element){
+    if (element.classList.contains("cell") && element.innerText == ""){
         element.innerText = "X";
-        opponentMove() 
-        
+
+        let gameContinues = checkResult();
+
+        if (gameContinues) {
+            opponentMove();
+            checkResult();
+        }
     }
-    else{
-
+    else {
+        // Do nothing
     }
-    //when pressed on square the square must be marked as X
-
 }
 
-function opponentMove() {
-    //computer opponent makes a move
+function opponentMove(){
 
-    //get all possible moves
-    let elements = Array.from(document.querySelectorAll(".cell"))
-    elements = elements.filter(function(el) {
-        return el.innerText == ""
-    });
+    // Get all elements with class name
+    var cells = Array.from(document.getElementsByClassName("cell"));
+    // Filter the elements by just selecting empty ones.
+      
+    cells = cells.filter(cell => cell.innerText == "");
 
-    let randomNo = randomInteger(0, elements.length);
+    // Get random number
+    let randomNumber = getRandomNumber(0, cells.length);
 
-    let selectedElement = elements[randomNo];
+    // Select random element 
 
-    selectedElement.innerText = "O";
-
+    let randomCell = cells[randomNumber];
     
-    //pick random element from possible moves
-    //mark that element as O
+    //and modify its innertext to O
 
+    randomCell.innerText = '0'
+}
+  
+
+function getRandomNumber(min, max){
+    const r = Math.random()*(max-min) + min
+    return Math.floor(r)
 }
 
-function randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function checkResult(){
+    isWinnerDetermined();
+    return anyMovesLeft();
 }
 
-function getRandomMove() {
-    //analyses boards and calculate the next move
-    
+function isWinnerDetermined(){
+    let winningCellCombinations = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        [0,3,6],
+        [1,4,7],
+        [2,5,8],
+        [0,4,8],
+        [2,4,6]
+    ]
+        //Go  through there winning combinatations
+        //Get all cells of those attribute values
+        // Check all the elements have the same inner text (X or 0)
+        // Carefull of empty values
+
+       // 2. We have 3 X or 3 O in a row, column or sideways
 }
 
-function WhoWon() {
-    //analyses the lines and calculates
-    
+function anyMovesLeft(){
+       
+    var cells = Array.from(document.getElementsByClassName("cell"));
+
+    cells = cells.filter(cell => cell.innerText == "");
+
+    if (cells.length == 0){
+        //modify .game--status to be draw
+        document.querySelector(".game--status").innerText = "DRAW";
+        return false; //the game is finished
+    }
+
+    return true; // the game continues
 }
 
-function isGameFinished() {
-    
-}
+function resetGame(){
 
-function resetGame() {
-    
 }
-
